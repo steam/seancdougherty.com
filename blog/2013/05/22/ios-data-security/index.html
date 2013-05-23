@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>iOS Data Security - Sean Dougherty</title>
+  <meta name="author" content="Sean Dougherty">
+
+  
+  <meta name="description" content="On a recent client project we had the need to research the encryption/security features available to iOS applications. This is a modified write-up of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://seancdougherty.com/blog/2013/05/22/ios-data-security">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Sean Dougherty" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sean Dougherty</a></h1>
+  
+    <h2>Some thoughts about mobile software development (mostly).</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:seancdougherty.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">iOS Data Security</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-22T13:56:00-06:00" pubdate data-updated="true">May 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>On a recent client project we had the need to research the encryption/security features available to iOS applications. This is a modified write-up of our findings. Special thanks to Jay Zeschin <a href="https://twitter.com/jayzes">@jayzes</a> at <a href="http://modeset.com/">Mode Set</a> for editing the original draft I wrote.</p>
+
+<p>There are several layers of security that affect a user’s data when using an iOS app &ndash; security at rest on the server, security in transit over the network, and security on the iOS device. Focusing on the iOS device only for now, there are several scenarios that are of primary concern: while a user is actively using the app, while a user not actively using the app, when data is stored on disk, and when data is present in memory (RAM). In addition, there are security concerns inherent in ancillary processes such as backing up a device (via iTunes or iCloud) or migrating data to separate devices (e.g. when a user gets a new phone).</p>
+
+<p>While it is impossible to protect user data 100% in all scenarios, there are a number of options available that provide increasing levels of security and protection. Each additional measure of security has advantages and drawbacks, and comes with some measure of added time and effort during the development process.</p>
+
+<h3>1. Built-in Data Protection</h3>
+
+<p>Starting with iOS 4, Apple added operating-system level data security provisions and made them available to app developers. In short, if an app developer chooses to make use of these protections and an app user enables a passcode on their device, all data stored to the device by that app is transparently encrypted and protected from unauthorized access by anyone (including the user) when the device is locked, protecting it while at rest. Technically, this is implemented with a tiered system of encrypted keys called keybags, the last of which is based directly off the user’s passcode. When the passcode is entered and the phone is unlocked, all application data is available and unencrypted.</p>
+
+<p>This built-in protection scheme is what Apple makes use of internally for their own apps (such as Mail). It’s a great option and requires very little development time to integrate, so we strongly recommend using it. Any strategy we choose should, at minimum, include this security measure.</p>
+
+<h4>Pros:</h4>
+
+<ul>
+<li>Hardware-keyed and transparent encryption of user data</li>
+<li>Follows industry standard practices</li>
+<li>Integrated at the operating-system level</li>
+<li>Architected, developed and supported by Apple</li>
+</ul>
+
+
+<h4>Cons:</h4>
+
+<ul>
+<li>Requires the user to have a passcode enabled on their device to offer any sort of data protection value</li>
+<li>Apps are unable to programmatically ascertain whether a user has enabled a device passcode (a relatively recent change), which prevents apps from being able to prompt users or limit functionality to guarantee that data is protected. See more about this in the “Recommendations” section below.</li>
+</ul>
+
+
+<h3>2. Adding a Second Level of Protection</h3>
+
+<p>The two cons of built-in data protection are significant limitations, and due to the low level integration of those built-in protections into the operating system, it is difficult if not impossible to augment them directly. For that reason, it is often necessary to implement additional protection of sensitive data at a higher level. Several industry tested code libraries exist for this purpose, most notably <a href="http://sqlcipher.net/">SQLCipher</a>. These libraries encrypt the data contained in the database files before they are written to disk, in contrast to Apple’s approach of encrypting the file itself.</p>
+
+<h4>Pros:</h4>
+
+<ul>
+<li>Offers additional protection on top of Apple’s basic security</li>
+<li>Data is encrypted and secure even when the device does not have a passcode</li>
+<li>Ability to customize/control protection and related user interactions within the app</li>
+</ul>
+
+
+<h4>Cons:</h4>
+
+<ul>
+<li>Time consuming to implement, requiring structural changes to the existing data model</li>
+<li>Requires introducing a strategy for encryption key management</li>
+<li>Introduces an overhead for management/maintenance on future feature work</li>
+</ul>
+
+
+<h3>3. Removing Sensitive Data From Memory</h3>
+
+<p>When data is actively in-use by an application it is stored in RAM, a volatile physical location on the device. Depending on the specific use case, some kinds of data are created, accessed, and destroyed all solely in RAM. Other data (downloaded images or data from a local database, for example) is read from disk and stored in RAM. Data stored in this way is necessarily unencrypted and inherently temporary &ndash; it is created by the device as needed and discarded when the app is no longer running. However, the way that Apple has architected iOS means that applications may continue to run and be resident in memory when they are in the background, sometimes for days or weeks on end. While it would take a much more concentrated hacking effort, it is technically possible to access data belonging to a running app from memory. Securing this data requires purging all sensitive data from memory when a screen is hidden or the application goes into the background &ndash; a process that involves a very careful line-by-line audit of an app and how data is created and stored.</p>
+
+<h4>Pros:</h4>
+
+<ul>
+<li>Combined with the previous steps, this is the most secure form of data protection</li>
+<li>It is much more difficult to exploit a running application with this level of protection</li>
+</ul>
+
+
+<h4>Cons:</h4>
+
+<ul>
+<li>Extremely time consuming to implement</li>
+<li>Requires close scrutiny of every line of code in the app</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sean Dougherty</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-22T13:56:00-06:00" pubdate data-updated="true">May 22<span>nd</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://seancdougherty.com/blog/2013/05/22/ios-data-security/" data-via="sdougherty" data-counturl="http://seancdougherty.com/blog/2013/05/22/ios-data-security/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>I am an iOS software developer living in Denver Colorado. I spend my time writing code, mostly objective-c, hanging out with my 3 boys, injuring myself while running and playing drums.</p>
+	<p>I run a software development consultancy, <a href="http://www.process255.com">process255.com</a> and an iOS app product company <a href="http://www.simpletomato.com">simpletomato.com</a></p>
+</section>
+
+<section>
+  <div>
+    <p><br /><a href="http://twitter.com/sdougherty">My Tweets, on Twitter.</a></p>
+    <a href="http://twitter.com/sdougherty" class="twitter-follow-button" data-show-count="">Follow @sdougherty</a>
+  </div>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/ios-data-security/">iOS Data Security</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sean Dougherty -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
