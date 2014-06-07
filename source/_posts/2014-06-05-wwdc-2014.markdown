@@ -12,6 +12,8 @@ Apple's annual World Wide Developers Conference was held in San Francisco over t
 
 If WWDC 2013 was all about users, 2014 was all about developers. While iOS 8 and OS X 10.10 have lots of great new features for end users these pale in comparison to the sheer volume of new and improved tools Apple made available to their millions of iOS and Mac developers. The general opinion we heard around Moscone was excitement and approval. We couldn't agree more.
 
+The biggest news for us (by far) was the introduction of a new programming language, Swift. Swift is a modern, concise, expressive and safe programming language that is the future of iOS and OS X applications. There was a collective gasp from 5000+ developers when Swift was announced at the keynote. The rest of the week was all excitement as one developer after another decided what a great addition Swift is to the Cocoa and Cocoa Touch communities.
+
 ##Big takeaways
 
 * This was the biggest WWDC for developers since 2008 (the introduction of the App Store for the iPhone 3G).
