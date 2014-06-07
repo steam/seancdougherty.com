@@ -1,0 +1,129 @@
+---
+layout: post
+title: "WWDC 2014"
+date: 2014-06-05 16:58
+comments: true
+categories: 
+---
+
+Apple's annual World Wide Developers Conference was held in San Francisco over the past week. It turns out that 2014 was a great year for first time attendees like myself and my fellow iOS developer co-worker David Nix [@dave_nix](https://twitter.com/dave_nix). GoSpotCheck was lucky enough to get two tickets in the Apple lottery (at a pretty price of $1600 each) and graciously sent David and I to soak up all the new Apple goodness. Between the two of us we were able to attend a wide range of sessions and events. This post is a team effort. We have taken the time to compare notes and put together what we feel are the key takeaways from WWDC 2014.
+
+##Developers! Developers! Developers!
+
+If WWDC 2013 was all about users, 2014 was all about developers. While iOS 8 and OS X 10.10 have lots of great new features for end users these pale in comparison to the sheer volume of new and improved tools Apple made available to their millions of iOS and Mac developers. The general opinion we heard around Moscone was excitement and approval. We couldn't agree more.
+
+##Big takeaways
+
+* This was the biggest WWDC for developers since 2008 (the introduction of the App Store for the iPhone 3G).
+* Swift is available in iOS 7 or greater so supporting iOS 6 is a no go. **Hint: We really want to use Swift.**
+
+####A little taste of the goodness
+
+Lets loop through the range of 1...5 inclusive and print out some calculations on index
+
+```objective-c 
+for index in 1...5 {
+    println("\(index) times 5 is \(index * 5)")
+}
+```
+
+Replace indexes 2, 3 and 4 in our friends array
+
+```objective-c 
+friends[2...4] = ["John", "Anna", "Henry"]
+
+```
+
+Use a tuple to return multiple ages of our friends
+
+```objective-c 
+func getAges() -> (Int, Int, Int) {
+    return (28, 40, 15)
+}
+let (johnAge, annaAge, henryAge) = getAges()
+```
+This is just a small taste of the compactness and expressiveness built into Swift. For a more detailed look into the language download "The Swift Programming Language" in iBooks.
+
+* The new debugging features in Xcode are amazing.
+* Swift plays well with ObjC (and vice versa). An incredible feat by Apple.
+* Apple hates the "hamburger" menu, and we agree with them.
+* Remember, everything really cool in iOS 8 will (probably) not be usable with iOS 7.
+* Testflight will be integrated. No more device ids needed! Just apple ids. (It’s based on per user, not on per device.)
+* No more calculating tableview cell heights or collectionview cell sizes! (iOS 8 only though)
+* A lot of the new iOS 8 user-facing features are already present in Android. Whether or not Apple does this better than Android remains to be seen.
+* Xcode playgrounds are incredible. Totally changes the way we code in Swift (for the better). It's like irb or pry on steroids.
+* Apple is pushing for more interactive UI (think Facebook's Paper).
+* A big theme at the conference was adaptability. It is clear Apple is planning for more devices and potential screen dimensions. A lot of the new UIKit APIs are geared towards making application user interfaces work at any size. Becuase of this many of the explict references to iPad, iPhone and specific device orientations (portrait or landscape) are disappearing from the language. In their place are adaptive concepts that aim to communicate relative size such as 'regular height' or 'compact width'. They've put a tremndous amount of effort into making adaptive layouts easier to create.
+* Continuity is anothe concept Apple reiterated. Allowing users to move from device to device picking up where they left off is going to set high quality apps apart.
+* Prototyping, or making *fake* apps is a crucial step in the process. Start with the most disposable possible version of an app idea. Use a pen and paper. Come up with lots of ideas. **Throw most of them away.** Build static, image based versions of the ones that seem promising. Show them to real users. **Throw most of them away.** Don't start building a time intensive **real** app until you have feedback on the fake app from real users. Hopefully this results in a better app, that real users want, with much less effort.
+
+##Opinion
+
+We're curious to see how fast Swift is compared to Objective C. Part of the joy of ObjC is that, even though it is verbose and "ugly", you typically never have to worry about performance. It is very fast. It was stupid of Apple to compare Swift to Python in the main keynote. Python is an interpreted language, Swift is compiled. It's like comparing apples to oranges (pun intended). But Apple did have slides saying Swift is faster than ObjC. However, I (David) read an article, which I can't find now of course, that benchmarked Swift vs ObjC. The article claimed Swift was slower, sometimes by 200x or more. The author was doing things that probably wouldn't come up in most production apps (i.e. sorting millions of objects). However, only time will tell to see if Swift keeps on par with ObjC.
+
+Swift combined with Xcode's new debugging features is going to boost programmer productivity significantly. It will give us more time to work on polished (nice to have) features like custom animations or custom UI.
+
+ObjC won't be going anywhere for a while, but we might as well consider it legacy code. Swift is so much nicer to write. We can see Apple dropping ObjC in the next couple years. They often take an adapt or die methodology.
+
+Several sessions dealt with user interfaces and how to approach designing them, both visual design and information design. Apple continuously reinforced the importance of **clear**, **simple** and **focused** design. An example of poor design, in Apple's opinion, is the hamburger button. Hamburger buttons interfere with the navigation back arrow, confusing the user. They also open drawers which tend to collect junk just like real drawers. Apple highly recommends tab bars instead of hamburger buttons. Even though tab bars take up screen real estate they greatly increase clarity and tend to get used much more often than hidden hamburger button navigation. We agree that hamburger buttons should go away in most cases.
+
+Mature apps will need to be adaptive. This means having the appropriate content and sizing of that content at all size classes. This also means making our apps handle Adaptive Type, a system wide, user configured setting that dynamically changes the size of type throughout all apps.
+
+##Technical Thoughts (targeted for programmers)
+
+Swift has no concept of public/private/protected. It will be the developer's job to clearly mark methods as public (via a comment) and to only use those methods publicly. However, Apple said access control will be coming to Swift in the future.
+
+The ObjC feature of sending a message to nil and nothing happens has been great for the user in preventing crashes, but tough for the programmer when debugging during development. Swift does not have this feature. At first, we were scared this would lead to "NullPointerExceptions" that are common in Java. However, Swift uses Optional types to address this issue. An optional tells the compiler that a variable may or may not have a value. The compiler, then, is very strict about how you use these values. It also forces you to initialize every variable. You cannot initialize a non-optional variable to nil.
+
+Swift has features very friendly to functional programming. We think we'll see more and more functional programming paradigms in iOS as time goes on.
+
+Another quick taste of the functional power of Swift.
+
+```objective-c 
+
+// this is not possible in Objective-C
+
+numbers.map { number in 3 * number }
+
+// but we can do better, we can shorten it even more
+
+numbers.map { 3 * $0 }
+
+```
+
+Our summary of the announcements and sessions at WWDC 2014 would be incomplete without a list of highlights. Below are a few of the more significant changes to the tooling, API and end user facing components of iOS and OS X apps.
+
+##Tooling Highlights
+
+* **Swift** - a completely new programming language for writing iOS and OS X apps
+* **Swift REPL** - a command line interactive shell for running Swift code (similar to irb for ruby)
+* **Playgrounds** - realtime environments for trying out code
+* **View Debugging** - visual debugging of views and their layout constraints
+* **Universal Storyboards** - a single storyboard for all screen sizes
+* **Resizable Simulator** - the iOS simulator can be resized to any size
+
+
+##API Highlights
+
+* **App Extensions** - iOS system wide widgets accessible from other apps
+* **UITableView & UICollectionView** - automatic calculation of table and collection cell size
+* **Size Classes & Trait Collections** - device & orientation independent handling of user interface size changes
+* **Rotation API deprecation** - rotation events are deprecated, replaced by size classes
+* **CloudKit** - structured, cloud based storage in iCloud
+* **SceneKit** - simple 3D engine now available in iOS
+* **TouchID** - applications can now access authentication through TouchID on iPhone 5s
+* **UIAlertController** - Alert views and Action sheets are now full blown view controllers
+* **UISplitViewController** - now availble on iPhone, one uniform controller for handling master/detail content
+* **HealthKit** - a framework for managing personal health information
+* **HomeKit** - a framework for communicating between home automation devices
+
+##End User Highlights
+
+* **iMessage** - SMS is supported in all iMessage conversations
+* **Handoff** - users can start an activity on one device and seemlessly transition it to another device
+* **iCloud storage** - larger buckets of iCloud data can be purchased
+* **Document Picker** - 3rd party cloud storage providers can offer access to all applications
+
+Disagree? Did we miss something? You can reach us both on twitter [@dave_nix](https://twitter.com/dave_nix) or [@sdougherty](https://twitter.com/sdougherty). We'd love to hear from you. 
+
+
