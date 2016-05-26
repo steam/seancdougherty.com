@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "More Functional Please"
-date: 2014-12-31 05:00
+date: 2014-12-31 10:43
 comments: true
 categories: 
 ---
@@ -14,7 +14,7 @@ Managing state is one of the most common problems we encounter when building a r
 
 Functional programming favors immutability over mutable objects. At first this seemed wasteful to me. Why create something new each time when I already have an available object. Turns out that the stability of data structures not changing is usually worth the small trade off of allocating a new one.
 
-I recently came across Rob Napier's slides from his talk ["Introduction to functional programming in Swift"](https://speakerdeck.com/rnapier/llama-calculus) from CocoaConf Atlanta 2014. Its a great set of slides that I encourage you to read if you1re interested in a more in depth look at functional concepts and motivations. The example below is a simple example of using Swift's `map` function in place of the traditional for loop.
+I recently came across Rob Napier's slides from his talk ["Introduction to functional programming in Swift"](https://speakerdeck.com/rnapier/llama-calculus) from CocoaConf Atlanta 2014. Its a great set of slides that I encourage you to read if you're interested in a more in depth look at functional concepts and motivations. The example below is a simple example of using Swift's `map` function in place of the traditional for loop.
 
 This code is a simplified version of code we have in the Ello app. Posts represent a user's post. Regions are sections of content in a post. Our goal is to create an array of `String` types, each containing the content for an individual region. Simple enough.
 
