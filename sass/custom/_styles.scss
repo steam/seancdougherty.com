@@ -115,3 +115,17 @@ body {
 :-ms-input-placeholder {  
    color: $link-color;  
 }  
+
+hr {
+  margin-bottom: 1em;
+  border:none;
+  border-top:1px dotted #333;
+  color:#fff;
+  background-color:#fff;
+  height:1px;
+}
+
+aside.sidebar img, article img {
+  border:none;
+  box-shadow:none;
+}
