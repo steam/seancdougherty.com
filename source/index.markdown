@@ -43,4 +43,4 @@ Over the last 20 years I have charted a path from my background in fine arts to 
 [See full work history](/work-history/)
 
 ###Contact
-You can reach me on twitter [@sdougherty](https://twitter.com/sdougherty), ello [@sean](https://ello.co/sean) or by email at seancdougherty@gmail.com and view OSS and work on github [steam](https://github.com/steam).
+You can reach me on twitter [@sdougherty](https://twitter.com/sdougherty), ello [@sean](https://ello.co/sean) or by email at seancdougherty@gmail.com and view OSS and work on github [steam](https://github.com/steam). [View my resume as a pdf](/assets/Sean-Dougherty-Resume.pdf).
