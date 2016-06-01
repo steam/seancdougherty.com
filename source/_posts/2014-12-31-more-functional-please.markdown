@@ -3,7 +3,7 @@ layout: post
 title: "More Functional Please"
 date: 2014-12-31 10:43
 comments: true
-categories: 
+categories: swift, iOS
 ---
 
 Since starting the Ello iOS app I've been writing Swift 99% of the time. Its not yet as natural as Objective-C to me but the benefits are obvious. A concise syntax with ALL types as first class citizens has removed a lot of the primitive/object song and dance required in Objective-C. I knew I'd love Swift's syntax and type system. What I've been surprised by, and excited by, are Swift's functional features. Most of the interesting exploration and writing about Swift has come from the Functional programming community. I have to admit that almost all of the functional programming concepts are new to me. Like most Objective-C developers I come from a world of strict object orientation and an imperative programming mindset.
