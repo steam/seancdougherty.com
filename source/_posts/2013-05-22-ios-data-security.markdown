@@ -3,7 +3,7 @@ layout: post
 title: "iOS Data Security"
 date: 2013-05-22 13:56
 comments: false
-categories: 
+categories: iOS
 ---
 
 On a recent client project we had the need to research the encryption/security features available to iOS applications. This is a modified write-up of our findings. Special thanks to Jay Zeschin [@jayzes](https://twitter.com/jayzes) at [Mode Set](http://modeset.com/) for editing the original draft I wrote. 
