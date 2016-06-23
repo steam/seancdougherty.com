@@ -3,7 +3,7 @@ layout: post
 title: "Open Sourcing Ello's iOS App"
 date: 2016-06-22 22:50
 comments: true
-categories: 
+categories: iOS
 ---
 
 A couple weeks ago we open sourced [Ello's iOS App](https://github.com/ello/ello-ios). 
