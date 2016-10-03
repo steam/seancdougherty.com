@@ -14,7 +14,7 @@ The other day, at work, I got myself into GIT trouble. This happens once or twic
 
 ####What did my git fat fingers screw up?
 
-I'm so glad you asked. Apple recently released Xcode 8. A requirement of using Swift and Xcode 8 (out of the box) is that your code must be Swift 2.3 or Swift 3.0. Up until the move to Xcode 8 Ello's iOS codebase was written in the production version of Swift, 2.2, . Like a good git citizen, I created a topic branch from `master` named `sd/swift-2-dot-3`. Brilliant. No problems yet.
+I'm so glad you asked. Apple recently released Xcode 8. A requirement of using Swift and Xcode 8 (out of the box) is that your code must be Swift 2.3 or Swift 3.0. Up until the move to Xcode 8 Ello's iOS codebase was written in the production version of Swift, 2.2. Like a good git citizen, I created a topic branch from `master` named `sd/swift-2-dot-3`. Brilliant. No problems yet.
 
 The conversion of over 50k lines of Swift 2.2 to Swift 2.3 ended up being a bigger task than originally planned. Not entirely surprising but we had other "real" work to do. We decided to branch off of `sd/swift-2-dot-3` for all feature work happening at the same time. For example, when adding **Awesome Widget** we'd simply `git co sd/swift-2-dot-3` followed with `git co -b sd/feature/awesome-widget`.
 
